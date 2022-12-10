@@ -5,7 +5,6 @@ namespace UselessClasses
 {
     class Menu
     {
-        public int SelectedPosition { get; set; } = 0;
         public List<MenuEntry> Entries = new List<MenuEntry>();
         public Dictionary<ConsoleKey, MenuInteraction> Interactions = new Dictionary<ConsoleKey, MenuInteraction>();
 
@@ -82,10 +81,10 @@ namespace UselessClasses
     {
         public override void ProcessMenuInteraction(Menu menu, MenuDrawer drawer)
         {
-            menu.SelectedPosition--;
-            if (menu.SelectedPosition < 0)
+            drawer.SelectedPosition--;
+            if (drawer.SelectedPosition < 0)
             {
-                menu.SelectedPosition = menu.Entries.Count - 1;
+                drawer.SelectedPosition = menu.Entries.Count - 1;
             }
             Console.Clear();
             drawer.Draw();
@@ -96,10 +95,10 @@ namespace UselessClasses
     {
         public override void ProcessMenuInteraction(Menu menu, MenuDrawer drawer)
         {
-            menu.SelectedPosition++;
-            if (menu.SelectedPosition >= menu.Entries.Count)
+            drawer.SelectedPosition++;
+            if (drawer.SelectedPosition >= menu.Entries.Count)
             {
-                menu.SelectedPosition = 0;
+                drawer.SelectedPosition = 0;
             }
             Console.Clear();
             drawer.Draw();
@@ -111,12 +110,14 @@ namespace UselessClasses
         public override void ProcessMenuInteraction(Menu menu, MenuDrawer drawer)
         {
             Console.Clear();
-            menu.HandleChoise(menu.SelectedPosition);
+            menu.HandleChoise(drawer.SelectedPosition);
         }
     }
 
     class MenuDrawer
     {
+        public int SelectedPosition { get; set; } = 0;
+
         private Menu _menu;
         private const int PADDING = 2;
         private const int BULLET = 1;
@@ -134,7 +135,7 @@ namespace UselessClasses
             for (int i = 0; i < _menu.Entries.Count; i++)
             {
                 MenuEntry entry = _menu.Entries[i];
-                char bullet = i == _menu.SelectedPosition
+                char bullet = i == SelectedPosition
                     ? '*'
                     : ' ';
                 Console.WriteLine($"|{bullet}{entry.EntryName.PadRight(maxLength)}|");
